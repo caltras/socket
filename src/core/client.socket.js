@@ -61,7 +61,7 @@ class Client {
         if(receiver){
             messageObj.to = receiver;
         }
-        messageObj.from = this.client.name;
+        messageObj.from = this.name;
         this.client.write(messageObj.toString());
         return this;
     }
