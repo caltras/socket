@@ -44,7 +44,8 @@ class Client {
         debug("Closed client");
     }
     register(){
-        let messageObj = new RegisterMessage(this.name);
+        console.log("Registering..."+this.group);
+        let messageObj = new RegisterMessage(this.name,this.group);
         this.client.write(messageObj.toString());
     }
     broadcast(message,group){
