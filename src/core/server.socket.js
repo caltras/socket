@@ -15,7 +15,7 @@ class Server {
         let self = this;
         this.server = net.createServer(function(socket){
             self.onConnect(socket,self);
-        }).listen((port || config.SOCKET_PORT), (server || config.SOCKET_SERVER));
+        }).listen((port || config.PORT), (server || config.SERVER));
         return this;
     }
     onConnect(socket,self) {
@@ -46,9 +46,12 @@ class Server {
             if (Message.BROADCAST === message.type) {
                 this.broadcast(message, socket);
             }else {
-                this.emit(message);
+                if(message.hasOwnProperty("to") || message.hasOwnProperty("group")){
+                    this.emit(message);
+                }
             }
         }
+        return message;
     }
     onDisconnect(socket,self) {
         self.clients.splice(self.clients.indexOf(socket), 1);

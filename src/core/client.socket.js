@@ -11,11 +11,11 @@ class Client {
         this.name = name;
         this.group = group || "ALL";
     }
-    connect(){
+    connect(port,server){
         var self =this;
         this.client = new net.Socket();
         
-        this.client.connect({port:config.PORT,host:config.SERVER},function(data){
+        this.client.connect({port:(port || config.PORT),host: (server || config.SERVER)},function(data){
             self.register();
         });
         this.client.on("connect",this.onConnect);
@@ -58,7 +58,9 @@ class Client {
     send(message,receiver){
         debug("sending message...");
         let messageObj = new Message(message);
-        messageObj.to = receiver;
+        if(receiver){
+            messageObj.to = receiver;
+        }
         messageObj.from = this.client.name;
         this.client.write(messageObj.toString());
         return this;
