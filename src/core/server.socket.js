@@ -10,12 +10,12 @@ class Server {
         this.groups = {};
     }
     
-    start() {
+    start(port,server) {
         debug("Starting server socket...");
         let self = this;
         this.server = net.createServer(function(socket){
             self.onConnect(socket,self);
-        }).listen(config.PORT, config.SERVER);
+        }).listen((port || config.SOCKET_PORT), (server || config.SOCKET_SERVER));
         return this;
     }
     onConnect(socket,self) {
