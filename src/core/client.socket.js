@@ -44,26 +44,39 @@ class Client {
         debug("Closed client");
     }
     register(){
-        console.log("Registering..."+this.group);
-        let messageObj = new RegisterMessage(this.name,this.group);
-        this.client.write(messageObj.toString());
+        if(this.client && !this.client.destroyed){
+            console.log("Registering..."+this.group);
+            let messageObj = new RegisterMessage(this.name,this.group);
+            this.client.write(messageObj.toString());
+        }else{
+            debug("Destroyed client");
+        }
+        return this;
     }
     broadcast(message,group){
-        let messageObj = new BroadcastMessage(message);
-        messageObj.group = group || "ALL";
-        messageObj.from = this.client.name;
-        
-        this.client.write(messageObj.toString());
+        if(this.client && !this.client.destroyed){
+            let messageObj = new BroadcastMessage(message);
+            messageObj.group = group || "ALL";
+            messageObj.from = this.client.name;
+            
+            this.client.write(messageObj.toString());
+        }else{
+            debug("Destroyed client");
+        }
         return this;
     }
     send(message,receiver){
-        debug("sending message...");
-        let messageObj = new Message(message);
-        if(receiver){
-            messageObj.to = receiver;
+        if(this.client && !this.client.destroyed){
+            debug("sending message...");
+            let messageObj = new Message(message);
+            if(receiver){
+                messageObj.to = receiver;
+            }
+            messageObj.from = this.name;
+            this.client.write(messageObj.toString());
+        }else{
+            debug("Destroyed client");
         }
-        messageObj.from = this.name;
-        this.client.write(messageObj.toString());
         return this;
     }
 }

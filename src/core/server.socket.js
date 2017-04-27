@@ -31,27 +31,32 @@ class Server {
 
     }
     onMessage(data,socket) {
-        var message = JSON.parse(data);
-        if (Message.REGISTER === message.type) {
-            if(socket.name || this.clients.hasOwnProperty(socket.name)){
-                var oldName = socket.name;
-                delete this.clients[oldName];
-            }
-            socket.name = message.message;
-            this.clients[socket.name] = socket;
-            var group= this.groups[message.group] || {};
-            group[socket.name] = socket;
-            this.groups[message.group] = group;
-        }else{
-            if (Message.BROADCAST === message.type) {
-                this.broadcast(message, socket);
-            }else {
-                if(message.hasOwnProperty("to") || message.hasOwnProperty("group")){
-                    this.emit(message);
+        try{
+            var message = JSON.parse(data);
+            if (Message.REGISTER === message.type) {
+                if(socket.name || this.clients.hasOwnProperty(socket.name)){
+                    var oldName = socket.name;
+                    delete this.clients[oldName];
+                }
+                socket.name = message.message;
+                this.clients[socket.name] = socket;
+                var group= this.groups[message.group] || {};
+                group[socket.name] = socket;
+                this.groups[message.group] = group;
+            }else{
+                if (Message.BROADCAST === message.type) {
+                    this.broadcast(message, socket);
+                }else {
+                    if(message.hasOwnProperty("to") || message.hasOwnProperty("group")){
+                        this.emit(message);
+                    }
                 }
             }
+            return message;
+        }catch(e){
+            return data;
         }
-        return message;
+        
     }
     onDisconnect(socket,self) {
         self.clients.splice(self.clients.indexOf(socket), 1);
