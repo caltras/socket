@@ -67,19 +67,21 @@ class Server {
         if (this.clients.hasOwnProperty(message.to)) {
             this.clients[message.to].write(message.message);
         }else{
-            if (this.groups.hasOwnProperty(message.group)) {
-                var clientsGroup = this.groups[message.group];
-                Object.keys(clientsGroup).forEach(function(key) {
-                    let client = clientsGroup[key];
-                    if (key === message.from) {
-                        return;
-                    }
-                    client.write(message.message);
-                });
-            }
+             this.broadcastGroup(message);
         }
     }
-
+    broadcastGroup(message){
+        if (this.groups.hasOwnProperty(message.group)) {
+            var clientsGroup = this.groups[message.group];
+            Object.keys(clientsGroup).forEach(function(key) {
+                let client = clientsGroup[key];
+                if (key === message.from) {
+                    return;
+                }
+                client.write(message.message);
+            });
+        }
+    }
     broadcast(message, sender) {
         debug("Broadcasting message...");
         let self =this;
