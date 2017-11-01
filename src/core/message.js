@@ -24,12 +24,13 @@ Message.build = function(str){
     }
 };
 Message.isGeneral = function(type){
-    return type === Message.BROADCAST || type === Message.EMIT || type === Message.REGISTER || type === Message.JOIN;
+    return type === Message.BROADCAST || type === Message.EMIT || type === Message.REGISTER || type === Message.JOIN || type === Message.TO_CLIENT;
 };
 
 Message.BROADCAST = "BROADCAST";
 Message.EMIT = "EMIT";
 Message.REGISTER = "REGISTER";
 Message.JOIN = "JOIN";
+Message.TO_CLIENT="TO_CLIENT";
 
 module.exports = Message;
