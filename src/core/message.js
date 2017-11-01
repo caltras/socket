@@ -26,5 +26,6 @@ Message.build = function(str){
 Message.BROADCAST = "BROADCAST";
 Message.EMIT = "EMIT";
 Message.REGISTER = "REGISTER";
+Message.JOIN = "JOIN";
 
 module.exports = Message;
