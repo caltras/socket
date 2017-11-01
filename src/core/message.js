@@ -5,6 +5,7 @@ class Message{
         this.broadcast = (this.type === Message.BROADCAST);
         this.message =message;
     }
+
     toString(){
         return JSON.stringify(this);
     }
@@ -21,6 +22,9 @@ Message.build = function(str){
     }catch(e){
         return new Message(msg);
     }
+};
+Message.isGeneral = function(type){
+    return type === Message.BROADCAST || type === Message.EMIT || type === Message.REGISTER || type === Message.JOIN;
 };
 
 Message.BROADCAST = "BROADCAST";
