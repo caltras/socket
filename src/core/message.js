@@ -18,6 +18,7 @@ Message.build = function(str){
         var m = new Message(obj.message,obj.type);
         m.to = obj.to;
         m.from=obj.from;
+        m.group = obj.group;
         return m;
     }catch(e){
         return new Message(msg);

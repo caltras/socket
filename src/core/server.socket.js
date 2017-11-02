@@ -78,7 +78,7 @@ class Server {
                 if (key === message.from) {
                     return;
                 }
-                client.write(message.message);
+                client.write(message.toString());
             });
         }
     }
@@ -90,7 +90,7 @@ class Server {
             if (client === sender) {
                 return;
             }
-            client.write(message.message);
+            client.write(message.toString());
         });
     }
 }
