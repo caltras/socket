@@ -33,5 +33,6 @@ Message.EMIT = "EMIT";
 Message.REGISTER = "REGISTER";
 Message.JOIN = "JOIN";
 Message.TO_CLIENT="TO_CLIENT";
+Message.ERROR = "ERROR";
 
 module.exports = Message;

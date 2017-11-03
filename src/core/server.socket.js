@@ -32,27 +32,33 @@ class Server {
     }
     onMessage(data,socket) {
         try{
-            var message = JSON.parse(data);
-            if (Message.REGISTER === message.type) {
-                if(socket.name || this.clients.hasOwnProperty(socket.name)){
-                    var oldName = socket.name;
-                    delete this.clients[oldName];
-                }
-                socket.name = message.message;
-                this.clients[socket.name] = socket;
-                var group= this.groups[message.group] || {};
-                group[socket.name] = socket;
-                this.groups[message.group] = group;
-            }else{
-                if (Message.BROADCAST === message.type) {
-                    this.broadcast(message, socket);
-                }else {
-                    if(message.hasOwnProperty("to") || message.hasOwnProperty("group")){
-                        this.emit(message);
+            let self = this;
+            data = "["+data.toString("UTF-8").replace(new RegExp("}{","g"),"},{")+"]";
+            var messageList = JSON.parse(data);
+            messageList.forEach((message)=>{
+                if (Message.REGISTER === message.type) {
+                    if(socket.name || this.clients.hasOwnProperty(socket.name)){
+                        var oldName = socket.name;
+                        delete this.clients[oldName];
+                    }
+                    socket.name = message.message;
+                    this.clients[socket.name] = socket;
+                    message.group.forEach((g,i)=>{
+                        var group= self.groups[g] || {};
+                        group[socket.name] = socket;
+                        self.groups[g] = group;
+                    });
+                }else{
+                    if (Message.BROADCAST === message.type) {
+                        this.broadcast(message, socket);
+                    }else {
+                        if(message.hasOwnProperty("to") || message.hasOwnProperty("group")){
+                            this.emit(message);
+                        }
                     }
                 }
-            }
-            return message;
+            });
+            return messageList;
         }catch(e){
             return data;
         }
